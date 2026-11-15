@@ -168,6 +168,10 @@ def scatter(rocks=20, trees=10, area=GROUND_SIZE, keep_clear=True, seed=None):
 
 def clear():
     """Delete the rocks and trees groups, and nothing else."""
-    for group in ("|" + ROCK_GROUP, "|" + TREE_GROUP):
-        if cmds.objExists(group):
-            cmds.delete(group)
+    cmds.undoInfo(openChunk=True, chunkName="Set dresser clear")
+    try:
+        for group in ("|" + ROCK_GROUP, "|" + TREE_GROUP):
+            if cmds.objExists(group):
+                cmds.delete(group)
+    finally:
+        cmds.undoInfo(closeChunk=True)
