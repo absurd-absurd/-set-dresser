@@ -27,10 +27,20 @@ MAX_TRIES_PER_ITEM = 200
 
 
 # --- things it makes ---------------------------------------------------------
+def _shade(obj, color):
+    """Give obj its own flat-coloured material so the layout reads in the viewport."""
+    mat = cmds.shadingNode("lambert", asShader=True, name=obj + "_mat")
+    cmds.setAttr(mat + ".color", *color, type="double3")
+    sg = cmds.sets(renderable=True, noSurfaceShader=True, empty=True, name=obj + "_SG")
+    cmds.connectAttr(mat + ".outColor", sg + ".surfaceShader")
+    cmds.sets(obj, edit=True, forceElement=sg)
+
+
 def make_ground():
     """The 40x40 ground plane."""
     ground = cmds.polyPlane(name="ground", width=GROUND_SIZE, height=GROUND_SIZE,
                             subdivisionsX=1, subdivisionsY=1)[0]
+    _shade(ground, (0.30, 0.45, 0.22))
     return ground
 
 
@@ -39,6 +49,7 @@ def make_path():
     path = cmds.polyPlane(name="path", width=PATH_WIDTH, height=GROUND_SIZE,
                           subdivisionsX=1, subdivisionsY=1)[0]
     cmds.move(0, 0.01, 0, path)
+    _shade(path, (0.55, 0.45, 0.32))
     return path
 
 
@@ -47,6 +58,7 @@ def make_pond():
     pond = cmds.polyCylinder(name="pond", radius=POND_RADIUS, height=0.04,
                              subdivisionsAxis=32)[0]
     cmds.move(POND_X, 0.02, POND_Z, pond)
+    _shade(pond, (0.15, 0.35, 0.60))
     return pond
 
 
