@@ -12,6 +12,7 @@ import maya.cmds as cmds
 # --- the set -----------------------------------------------------------------
 GROUND_SIZE = 40.0          # ground is GROUND_SIZE x GROUND_SIZE, centred on origin
 PATH_WIDTH = 4.0            # path runs along Z through x = 0
+PATH_MARGIN = 1.0           # extra space kept clear on each side of the path
 POND_X, POND_Z = 10.0, 10.0
 POND_RADIUS = 6.0
 
@@ -101,7 +102,7 @@ def is_clear(x, z, radius, keep_clear, placed):
     if abs(x) + radius > half or abs(z) + radius > half:
         return False
     if keep_clear:
-        if abs(x) < PATH_WIDTH / 2.0 + radius:
+        if abs(x) < PATH_WIDTH / 2.0 + PATH_MARGIN + radius:
             return False
         if math.hypot(x - POND_X, z - POND_Z) < POND_RADIUS + radius:
             return False
